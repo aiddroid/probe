@@ -3,7 +3,8 @@
 namespace probe\provider;
 
 /**
- * Linux information provider
+ * Linux information provider.
+ *
  * @author Eugene Terentev <eugene@terentev.net>
  */
 class LinuxProvider extends AbstractUnixProvider
@@ -18,17 +19,18 @@ class LinuxProvider extends AbstractUnixProvider
     protected $cpuInfoByLsCpu;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUptime()
     {
         $uptime = file_get_contents('/proc/uptime');
         $uptime = explode('.', $uptime);
+
         return (int) array_shift($uptime);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getOsRelease()
     {
@@ -36,7 +38,7 @@ class LinuxProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getOsKernelVersion()
     {
@@ -44,20 +46,22 @@ class LinuxProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTotalSwap()
     {
         $meminfo = $this->getMemInfo();
+
         return array_key_exists('SwapTotal', $meminfo) ? (int) ($meminfo['SwapTotal'] * 1024) : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFreeSwap()
     {
         $memInfo = $this->getMemInfo();
+
         return array_key_exists('SwapFree', $memInfo) ? (int) ($memInfo['SwapFree'] * 1024) : null;
     }
 
@@ -70,31 +74,32 @@ class LinuxProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTotalMem()
     {
         $meminfo = $this->getMemInfo();
+
         return array_key_exists('MemTotal', $meminfo) ? (int) ($meminfo['MemTotal'] * 1024) : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFreeMem()
     {
         $memInfo = $this->getMemInfo();
 
         $memFree = array_key_exists('MemFree', $memInfo) ? (int) $memInfo['MemFree'] : null;
-        $cached  = array_key_exists('Cached', $memInfo) ? (int) $memInfo['Cached'] : null;
+        $cached = array_key_exists('Cached', $memInfo) ? (int) $memInfo['Cached'] : null;
 
         $result = ($memFree ?: null) + ($cached ?: null);
 
-        return $result ? $result * 1024: null;
+        return $result ? $result * 1024 : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUsedMem()
     {
@@ -102,7 +107,7 @@ class LinuxProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getOsType()
     {
@@ -110,7 +115,7 @@ class LinuxProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuinfo()
     {
@@ -126,11 +131,13 @@ class LinuxProvider extends AbstractUnixProvider
             }
             $this->cpuInfo = $values;
         }
+
         return $this->cpuInfo;
     }
 
     /**
-     * Get information about CPU using lscpu untility
+     * Get information about CPU using lscpu untility.
+     *
      * @return array
      */
     public function getCpuinfoByLsCpu()
@@ -147,66 +154,74 @@ class LinuxProvider extends AbstractUnixProvider
             }
             $this->cpuInfoByLsCpu = $values;
         }
+
         return $this->cpuInfoByLsCpu;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuModel()
     {
         $cu = $this->getCpuinfo();
+
         return array_key_exists('model name', $cu) ? $cu['model name'] : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuVendor()
     {
         $cu = $this->getCpuinfo();
+
         return array_key_exists('vendor_id', $cu) ? $cu['vendor_id'] : null;
     }
 
     /**
-     * Return number of physical CPUs
+     * Return number of physical CPUs.
+     *
      * @return mixed|null
      */
     public function getPhysicalCpus()
     {
         $cu = $this->getCpuinfoByLsCpu();
+
         return array_key_exists('CPU(s)', $cu) ? $cu['CPU(s)'] : null;
     }
-    
+
     /**
      * @return mixed|null
      */
     public function getCoresPerSocket()
     {
         $cu = $this->getCpuinfoByLsCpu();
+
         return array_key_exists('Core(s) per socket', $cu) ? $cu['Core(s) per socket'] : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuCores()
     {
         $cu = $this->getCpuinfo();
+
         return array_key_exists('siblings', $cu) ? $cu['siblings'] : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuPhysicalCores()
     {
         $cu = $this->getCpuinfo();
+
         return array_key_exists('cpu cores', $cu) ? $cu['cpu cores'] : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskUsage()
     {
@@ -214,20 +229,22 @@ class LinuxProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskTotal()
     {
         $du = $this->getDiskUsageInfo();
+
         return array_key_exists('-', $du) ? $du['-']['size'] : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskFree()
     {
         $du = $this->getDiskUsageInfo();
+
         return array_key_exists('-', $du) ? $du['-']['avail'] : null;
     }
 }

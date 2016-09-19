@@ -8,39 +8,39 @@ namespace probe\provider;
  */
 abstract class AbstractBsdProvider extends AbstractUnixProvider
 {
-    /**
-     */
     public function getTotalSwap()
     {
         $meminfo = $this->getMemInfo();
+
         return array_key_exists('SwapTotal', $meminfo) ? (int) ($meminfo['SwapTotal'] * 1024) : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTotalMem()
     {
         $meminfo = $this->getMemInfo();
+
         return array_key_exists('MemTotal', $meminfo) ? (int) ($meminfo['MemTotal'] * 1024) : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFreeMem()
     {
         $memInfo = $this->getMemInfo();
 
-        $pageSize  = array_key_exists('hw.pagesize', $memInfo) ? (int) $memInfo['hw.pagesize'] : 4096;
+        $pageSize = array_key_exists('hw.pagesize', $memInfo) ? (int) $memInfo['hw.pagesize'] : 4096;
         $pagesFree = array_key_exists('Pages free', $memInfo) ? (int) $memInfo['Pages free'] : null;
-        $result    = $pageSize * $pagesFree;
+        $result = $pageSize * $pagesFree;
 
-        return $result ? $result: null;
+        return $result ? $result : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getOsRelease()
     {
@@ -48,7 +48,7 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getOsKernelVersion()
     {
@@ -56,55 +56,59 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuModel()
     {
         $sysctlinfo = $this->getSysctlInfo();
+
         return array_key_exists('machdep.cpu.brand_string', $sysctlinfo)
             ? $sysctlinfo['machdep.cpu.brand_string']
             : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuCores()
     {
         $sysctlinfo = $this->getSysctlInfo();
+
         return array_key_exists('hw.physicalcpu', $sysctlinfo)
             ? $sysctlinfo['hw.physicalcpu']
             : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuVendor()
     {
         $cu = $this->getCpuinfo();
+
         return array_key_exists('machdep.cpu.vendor', $cu) ? $cu['machdep.cpu.vendor'] : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPhysicalCpus()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuPhysicalCores()
     {
         $cu = $this->getCpuinfo();
+
         return array_key_exists('hw.physicalcpu', $cu) ? $cu['hw.physicalcpu'] : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuUsage($interval = 1)
     {
@@ -125,29 +129,32 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
         if (preg_match_all('/[0-9\.]+/i', $found, $matches)) {
             $usage[] = ($matches[0][0] + $matches[0][1]) / 100;
         }
+
         return $usage;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUptime()
     {
         $sysctl = $this->getSysctlInfo();
-        return (int)substr($sysctl['kern.boottime'], 8, 10);
+
+        return (int) substr($sysctl['kern.boottime'], 8, 10);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFreeSwap()
     {
         $meminfo = $this->getMemInfo();
+
         return array_key_exists('SwapFree', $meminfo) ? (int) ($meminfo['SwapFree'] * 1024) : null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUsedMem()
     {
@@ -160,7 +167,7 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMemInfo()
     {
@@ -184,7 +191,7 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
                 foreach ($tmp as $item) {
                     $item = explode(' = ', $item);
 
-                    if (sizeof($item) != 2) {
+                    if (count($item) != 2) {
                         continue;
                     }
 
@@ -200,11 +207,12 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
                 }
             }
         }
+
         return $this->memInfo;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuInfo()
     {
@@ -223,6 +231,7 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
             }
             $this->cpuInfo = $values;
         }
+
         return $this->cpuInfo;
     }
 }

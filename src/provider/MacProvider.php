@@ -3,7 +3,8 @@
 namespace probe\provider;
 
 /**
- * MacOS information provider
+ * MacOS information provider.
+ *
  * @author Eugene Terentev <eugene@terentev.net>
  * @author Semen Kotliarenko <semako.ua@gmail.com>
  */
@@ -15,34 +16,34 @@ class MacProvider extends AbstractBsdProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPhysicalCpus()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskUsage()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskTotal()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskFree()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }
