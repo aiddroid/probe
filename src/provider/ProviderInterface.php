@@ -2,7 +2,6 @@
 /**
  * @author Eugene Terentev <eugene@terentev.net>
  */
-
 namespace probe\provider;
 
 /**
@@ -32,54 +31,63 @@ interface ProviderInterface
 
     /**
      * @param \PDO $connection
+     *
      * @return mixed
      */
     public function getDbVersion(\PDO $connection);
 
     /**
      * @param \PDO $connection
+     *
      * @return mixed
      */
     public function getDbInfo(\PDO $connection);
 
     /**
      * @param \PDO $connection
+     *
      * @return mixed
      */
     public function getDbType(\PDO $connection);
 
     /**
-     * Total Memory in bytes
+     * Total Memory in bytes.
+     *
      * @return int|null
      */
     public function getTotalMem();
 
     /**
-     * Free Memory in bytes
+     * Free Memory in bytes.
+     *
      * @return int|null
      */
     public function getFreeMem();
 
     /**
-     * Used Memory in bytes
+     * Used Memory in bytes.
+     *
      * @return int|null
      */
     public function getUsedMem();
 
     /**
-     * Total Swap in bytes
+     * Total Swap in bytes.
+     *
      * @return int|null
      */
     public function getTotalSwap();
 
     /**
-     * Free Swap in bytes
+     * Free Swap in bytes.
+     *
      * @return int|null
      */
     public function getFreeSwap();
 
     /**
-     * Used Swap in bytes
+     * Used Swap in bytes.
+     *
      * @return int|null
      */
     public function getUsedSwap();
@@ -176,6 +184,7 @@ interface ProviderInterface
 
     /**
      * @param int $what
+     *
      * @return string
      */
     public function getPhpInfo($what = -1);
@@ -197,20 +206,24 @@ interface ProviderInterface
 
     /**
      * @param string $module
+     *
      * @return bool
      */
     public function isPhpModuleLoaded($module);
 
     /**
      * @param array $hosts
-     * @param int $count
+     * @param int   $count
+     *
      * @return array
      */
     public function getPing(array $hosts = null, $count = 2);
 
     /**
-     * Retrieves data from $_SERVER array
+     * Retrieves data from $_SERVER array.
+     *
      * @param $key
+     *
      * @return mixed|null
      */
     public function getServerVariable($key);

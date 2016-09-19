@@ -3,7 +3,8 @@
 namespace probe\provider;
 
 /**
- * Windows information provider
+ * Windows information provider.
+ *
  * @author Eugene Terentev <eugene@terentev.net>
  */
 class WindowsProvider extends AbstractProvider
@@ -36,7 +37,7 @@ class WindowsProvider extends AbstractProvider
      */
     public function getOsRelease()
     {
-        $objSet = $this->getWMI()->ExecQuery("SELECT Name FROM Win32_OperatingSystem");
+        $objSet = $this->getWMI()->ExecQuery('SELECT Name FROM Win32_OperatingSystem');
         foreach ($objSet as $obj) {
             return $obj->name;
         }
@@ -51,39 +52,41 @@ class WindowsProvider extends AbstractProvider
     }
 
     /**
-     * @return string
      * @throws \Exception
+     *
+     * @return string
      */
     public function getArchitecture()
     {
-        $objSet = $this->getWMI()->ExecQuery("SELECT Architecture FROM Win32_Processor");
+        $objSet = $this->getWMI()->ExecQuery('SELECT Architecture FROM Win32_Processor');
         foreach ($objSet as $obj) {
             switch ($obj->Architecture) {
                 case 0:
-                    return "x86";
+                    return 'x86';
                 case 1:
-                    return "MIPS";
+                    return 'MIPS';
                 case 2:
-                    return "Alpha";
+                    return 'Alpha';
                 case 3:
-                    return "PowerPC";
+                    return 'PowerPC';
                 case 6:
-                    return "Itanium-based systems";
+                    return 'Itanium-based systems';
                 case 9:
-                    return "x64";
+                    return 'x64';
             }
         }
     }
 
     /**
      * @param array $hosts
-     * @param int $count
+     * @param int   $count
+     *
      * @return array
      */
     public function getPing(array $hosts = null, $count = 2)
     {
         if (!$hosts) {
-            $hosts = array('gnu.org', 'github.com', 'wikipedia.org');
+            $hosts = ['gnu.org', 'github.com', 'wikipedia.org'];
         }
         $ping = [];
         foreach ($hosts as $host) {
@@ -93,24 +96,27 @@ class WindowsProvider extends AbstractProvider
             preg_match('/average\s?=\s?(\d+)/sim', $result, $matches);
             $ping[$host] = $matches[1];
         }
+
         return $ping;
     }
 
     /**
-     * @return int|null
      * @throws \Exception
+     *
+     * @return int|null
      */
     public function getUptime()
     {
-        $objSet = $this->getWMI()->ExecQuery("SELECT SystemUpTime FROM Win32_PerfFormattedData_PerfOS_System");
+        $objSet = $this->getWMI()->ExecQuery('SELECT SystemUpTime FROM Win32_PerfFormattedData_PerfOS_System');
         foreach ($objSet as $obj) {
             return $obj->SystemUpTime;
         }
     }
 
     /**
-     * @return mixed string|array
      * @throws \Exception
+     *
+     * @return mixed string|array
      */
     public function getLoadAverage()
     {
@@ -123,7 +129,7 @@ class WindowsProvider extends AbstractProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuCores()
     {
@@ -134,7 +140,7 @@ class WindowsProvider extends AbstractProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuPhysicalCores()
     {
@@ -145,7 +151,7 @@ class WindowsProvider extends AbstractProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpuModel()
     {
@@ -172,19 +178,21 @@ class WindowsProvider extends AbstractProvider
     public function getCpuInfo()
     {
         if ($this->cpuInfo === null) {
-            $this->cpuInfo = $this->getWMI()->ExecQuery("SELECT * FROM Win32_Processor");
+            $this->cpuInfo = $this->getWMI()->ExecQuery('SELECT * FROM Win32_Processor');
         }
+
         return $this->cpuInfo;
     }
 
     /**
-     * @return bool|int
      * @throws \Exception
+     *
+     * @return bool|int
      */
     public function getTotalMem()
     {
         $totalMemory = 0;
-        $objSet = $this->getWMI()->ExecQuery("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem");
+        $objSet = $this->getWMI()->ExecQuery('SELECT TotalPhysicalMemory FROM Win32_ComputerSystem');
         foreach ($objSet as $obj) {
             $totalMemory = $obj->TotalPhysicalMemory;
             break;
@@ -194,16 +202,18 @@ class WindowsProvider extends AbstractProvider
     }
 
     /**
-     * @return bool|int
      * @throws \Exception
+     *
+     * @return bool|int
      */
     public function getFreeMem()
     {
         $freeMemory = 0;
-        $objSet = $this->getWMI()->ExecQuery("SELECT FreePhysicalMemory FROM Win32_OperatingSystem");
+        $objSet = $this->getWMI()->ExecQuery('SELECT FreePhysicalMemory FROM Win32_OperatingSystem');
         foreach ($objSet as $obj) {
             $freeMemory += $obj->FreePhysicalMemory;
         }
+
         return $freeMemory;
     }
 
@@ -213,10 +223,11 @@ class WindowsProvider extends AbstractProvider
     public function getTotalSwap()
     {
         $total = 0;
-        $objSet = $this->getWMI()->ExecQuery("SELECT AllocatedBaseSize FROM Win32_PageFileUsage");
+        $objSet = $this->getWMI()->ExecQuery('SELECT AllocatedBaseSize FROM Win32_PageFileUsage');
         foreach ($objSet as $device) {
             $total += $device->AllocatedBaseSize;
         }
+
         return $total;
     }
 
@@ -226,10 +237,11 @@ class WindowsProvider extends AbstractProvider
     public function getUsedSwap()
     {
         $used = 0;
-        $objSet = $this->getWMI()->ExecQuery("SELECT CurrentUsage FROM Win32_PageFileUsage");
+        $objSet = $this->getWMI()->ExecQuery('SELECT CurrentUsage FROM Win32_PageFileUsage');
         foreach ($objSet as $device) {
             $used += $device->CurrentUsage;
         }
+
         return $used;
     }
 
@@ -247,7 +259,7 @@ class WindowsProvider extends AbstractProvider
     public function getCpuUsage()
     {
         $load = [];
-        $objSet = $this->getWMI()->ExecQuery("SELECT LoadPercentage FROM Win32_Processor");
+        $objSet = $this->getWMI()->ExecQuery('SELECT LoadPercentage FROM Win32_Processor');
         foreach ($objSet as $obj) {
             $load[] = $obj->LoadPercentage / 100;
         }
@@ -261,7 +273,7 @@ class WindowsProvider extends AbstractProvider
     public function getOsKernelVersion()
     {
         $wmi = $this->getWMI();
-        $objSet = $wmi->ExecQuery("SELECT BuildNumber FROM Win32_OperatingSystem");
+        $objSet = $wmi->ExecQuery('SELECT BuildNumber FROM Win32_OperatingSystem');
         foreach ($objSet as $obj) {
             return $obj->BuildNumber;
         }
@@ -289,6 +301,7 @@ class WindowsProvider extends AbstractProvider
                 }
             }
         }
+
         return $this->wmiConnection;
     }
 
@@ -301,34 +314,34 @@ class WindowsProvider extends AbstractProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPhysicalCpus()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskUsage()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskTotal()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDiskFree()
     {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

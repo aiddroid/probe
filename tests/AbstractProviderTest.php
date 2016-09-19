@@ -2,7 +2,6 @@
 /**
  * @author Eugene Terentev <eugene@terentev.net>
  */
-
 namespace probe\tests;
 
 use probe\Factory;

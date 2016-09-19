@@ -77,6 +77,7 @@ abstract class AbstractProvider implements ProviderInterface
         }
 
         $cmd = 'curl api.ipify.org';
+
         return shell_exec($cmd);
     }
 
@@ -114,12 +115,14 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * @param int $what
+     *
      * @return string
      */
     public function getPhpInfo($what = -1)
     {
         ob_start();
         phpinfo($what);
+
         return ob_get_clean();
     }
 
@@ -132,7 +135,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPhpModules()
     {
@@ -140,7 +143,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isPhpModuleLoaded($module)
     {
@@ -149,26 +152,29 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * @param array $hosts
-     * @param int $count
+     * @param int   $count
+     *
      * @return array
      */
     public function getPing(array $hosts = null, $count = 2)
     {
         if (!$hosts) {
-            $hosts = array('gnu.org', 'github.com', 'wikipedia.org');
+            $hosts = ['gnu.org', 'github.com', 'wikipedia.org'];
         }
         $ping = [];
         for ($i = 0; $i < count($hosts); $i++) {
             $command = "/bin/ping -qc {$count} {$hosts[$i]} | awk -F/ '/^rtt/ { print $5 }'";
-            $result = array();
+            $result = [];
             exec($command, $result);
             $ping[$hosts[$i]] = isset($result[0]) ? $result[0] : false;
         }
+
         return $ping;
     }
 
     /**
      * @param \PDO $connection
+     *
      * @return mixed
      */
     public function getDbInfo(\PDO $connection)
@@ -178,6 +184,7 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * @param \PDO $connection
+     *
      * @return mixed
      */
     public function getDbType(\PDO $connection)
@@ -187,6 +194,7 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * @param $connection
+     *
      * @return string
      */
     public function getDbVersion(\PDO $connection)
@@ -199,8 +207,10 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Retrieves data from $_SERVER array
+     * Retrieves data from $_SERVER array.
+     *
      * @param $key
+     *
      * @return mixed|null
      */
     public function getServerVariable($key)

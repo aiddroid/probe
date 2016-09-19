@@ -13,6 +13,7 @@ abstract class AbstractUnixProvider extends AbstractProvider
 
     /**
      * @param int $interval
+     *
      * @return array
      */
     public function getCpuUsage($interval = 1)
@@ -29,8 +30,8 @@ abstract class AbstractUnixProvider extends AbstractProvider
                 ) {
                     $result[] = array_slice($v, 1, 4);
                 }
-
             }
+
             return $result;
         };
         $stat1 = $stat();
@@ -42,6 +43,7 @@ abstract class AbstractUnixProvider extends AbstractProvider
             $idle = $stat2[$i][3] - $stat1[$i][3];
             $usage[$i] = $total !== 0 ? ($total - $idle) / $total : 0;
         }
+
         return $usage;
     }
 
@@ -60,6 +62,7 @@ abstract class AbstractUnixProvider extends AbstractProvider
                 }
             }
         }
+
         return $this->sysctlInfo;
     }
 
@@ -78,42 +81,45 @@ abstract class AbstractUnixProvider extends AbstractProvider
                 }
             }
         }
+
         return $this->memInfo;
     }
 
     /**
      * @param string $interval
+     *
      * @return mixed
      */
     public function getLoadAverage($interval = '5')
     {
-        $la = array_combine(['1','5','15'], sys_getloadavg());
+        $la = array_combine(['1', '5', '15'], sys_getloadavg());
         if (array_key_exists($interval, $la)) {
             return $la[$interval];
         } else {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
     }
 
     /**
-    * @return $mixed
-    */
+     * @return $mixed
+     */
     public function getDiskUsageInfo()
     {
-        if(null === $this->diskUsageInfo) {
+        if (null === $this->diskUsageInfo) {
             $data = explode(PHP_EOL, shell_exec('df -h --total|awk \'{print $1" "$2" "$3" "$4" "$5" "$6}\''));
             $this->diskUsageInfo = [];
             foreach ($data as $row => $line) {
-                if($row == 0 || !$line){
+                if ($row == 0 || !$line) {
                     continue;
                 }
 
-                list($filesystem, $size, $used, $avail, $usepercentage, $mountedon) = explode(" ", $line);
+                list($filesystem, $size, $used, $avail, $usepercentage, $mountedon) = explode(' ', $line);
                 if (isset($filesystem, $size, $used, $avail, $usepercentage, $mountedon)) {
                     $this->diskUsageInfo[$mountedon] = ['filesystem' => $filesystem, 'size' => $size, 'used' => $used, 'avail' => $avail, 'usepercentage' => $usepercentage, 'mountedon' => $mountedon];
                 }
             }
         }
+
         return $this->diskUsageInfo;
     }
 }
